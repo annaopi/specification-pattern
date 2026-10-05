@@ -1,32 +1,33 @@
-import { Account } from "../../domain/account/account"
 import { LLMProvider } from "../../domain/agent/llm-provider"
 import { QuestionClassifierAgent } from "../agent/question-classifier-agent"
-import { RequestFactory } from "../../domain/agent/request-factory"
 import { Session } from "../../domain/session/session"
 import { AgentSelector } from "../agent/agent-selector"
+import { AccountRepository } from "../../domain/account/account-repository"
 
 export class AnswerQuestionUseCase {
 	private llmProvider: LLMProvider
-	private requestFactory: RequestFactory
+	private accountRepository: AccountRepository
 
-	constructor(llmProvider: LLMProvider) {
+	constructor(llmProvider: LLMProvider, accountRepository: AccountRepository) {
 		this.llmProvider = llmProvider
-		this.requestFactory = new RequestFactory()
+		this.accountRepository = accountRepository
 	}
 
-	public async execute(account: Account, question: string): Promise<string> {
+	public async execute(accountId: string, question: string): Promise<string> {
+		const account = await this.accountRepository.findById(accountId)
+		if (!account) {
+			throw new Error("Account not found")
+		}
+
 		const classifier = new QuestionClassifierAgent()
-		const classifierRequest = this.requestFactory.createRequest(classifier, question)
-		const classifierResponse = await this.llmProvider.generateAnswer(classifierRequest)
-
-		const questionType = classifier.parseAnswer(classifierResponse)
-
+		const questionType = await classifier.answer(question, this.llmProvider)
 		const session = new Session(account, question, questionType)
 
 		const agent = new AgentSelector().selectAgent(session)
-		const request = this.requestFactory.createRequest(agent, question)
-		const response = await this.llmProvider.generateAnswer(request)
+		const response = await agent.answer(question, this.llmProvider)
+		account.incrementUsageCount()
 
+		await this.accountRepository.save(account)
 		return response
 	}
 }

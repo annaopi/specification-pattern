@@ -1,12 +1,16 @@
-import { Account } from "./domain/account/account"
-import { AccountType } from "./domain/account/account-type"
-import { ask } from "./index"
+import { ask, createAccount, getAccount } from "./index"
+
+async function newAccount(username: string) {
+	const account = await createAccount(username)
+	console.log(account)
+}
 
 async function main() {
-	const premiumAccount = new Account(AccountType.PREMIUM, 0)
+	const account = await getAccount("test-account")
 
-	const result = await ask(premiumAccount, "How to organize day at New York?")
+	const result = await ask(account.getId(), "How to become senior software engineer?")
 	console.log(result)
 }
 
+//newAccount("test-account")
 main()
