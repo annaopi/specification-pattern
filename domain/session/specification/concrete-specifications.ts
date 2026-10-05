@@ -1,5 +1,5 @@
 import { Session } from "../session"
-import { QuestionType } from "../../answer/question-type"
+import { QuestionType } from "../question-type"
 import { SessionSpecification } from "./specification"
 
 export class SoftwareDeveloperQuestionSpecification extends SessionSpecification {

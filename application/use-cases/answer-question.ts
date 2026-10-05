@@ -23,7 +23,7 @@ export class AnswerQuestionUseCase {
 		const questionType = await classifier.answer(question, this.llmProvider)
 		const session = new Session(account, question, questionType)
 
-		const agent = new AgentSelector().selectAgent(session)
+		const agent = AgentSelector.select(session)
 		const response = await agent.answer(question, this.llmProvider)
 		account.incrementUsageCount()
 

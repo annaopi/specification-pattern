@@ -11,7 +11,7 @@ import { SoftwareDeveloperExpertAgent } from "./ddd-expert-agent"
 import { StandardAgent } from "./standard-agent"
 
 export class AgentSelector {
-	rules: SessionRule[] = [
+	private static rules: SessionRule[] = [
 		{
 			specification: new SoftwareDeveloperQuestionSpecification().and(new PremiumAccountSpecification()),
 			agent: new SoftwareDeveloperExpertAgent(),
@@ -30,7 +30,7 @@ export class AgentSelector {
 		},
 	]
 
-	selectAgent(session: Session): Agent {
+	static select(session: Session): Agent {
 		const rule = this.rules.find((rule) => rule.specification.isSatisfiedBy(session))
 
 		if (!rule) {

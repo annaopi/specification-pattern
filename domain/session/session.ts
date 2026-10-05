@@ -1,4 +1,4 @@
-import { QuestionType } from "../answer/question-type"
+import { QuestionType } from "./question-type"
 import { Account } from "../account/account"
 
 export class Session {

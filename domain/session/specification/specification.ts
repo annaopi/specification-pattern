@@ -1,4 +1,4 @@
-import { Session } from "../user/session"
+import { Session } from "../session"
 
 export abstract class SessionSpecification {
 	abstract isSatisfiedBy(session: Session): boolean

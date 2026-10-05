@@ -25,7 +25,7 @@ const parseRecord = (raw: string): AccountRecord => {
 	return { id, username, type, usageCount }
 }
 
-export class AccountRepository implements AccountRepositoryPort {
+export class FileSystemAccountRepository implements AccountRepositoryPort {
 	private basePath: string
 
 	constructor(basePath: string = path.join(process.cwd(), "data", "accounts")) {

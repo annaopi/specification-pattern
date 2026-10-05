@@ -1,5 +1,5 @@
 import { Agent } from "../../domain/agent/agent"
-import { QuestionType } from "../../domain/answer/question-type"
+import { QuestionType } from "../../domain/session/question-type"
 import { LLMProvider } from "../../domain/agent/llm-provider"
 
 export class QuestionClassifierAgent extends Agent {
